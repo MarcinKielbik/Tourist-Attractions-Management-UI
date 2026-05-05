@@ -1,0 +1,14 @@
+.navbar {
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+
+    .search-field {
+        margin-top: 20px;
+        width: 300px;
+    }
+
+    color: var(--mat-sys-on-primary-container);
+
+
+}
