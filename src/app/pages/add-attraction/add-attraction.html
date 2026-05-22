@@ -1,1 +1,67 @@
-<p>add-attraction works!</p>
+<div class="field">
+    <h2>New Attraction</h2>
+
+    <form [formGroup]="attractionForm" (ngSubmit)="submit()">
+
+        <!-- Name -->
+        <mat-form-field class="form-field">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name">
+
+            @if (!attractionForm.hasError('required')) {
+            <mat-error>Please add name</mat-error>
+            }
+
+            @if (
+            attractionForm.get('name')?.hasError('minlength') &&
+            attractionForm.get('name')?.touched
+            ) {
+            <mat-error>Name must be longer than 3 letters</mat-error>
+            }
+
+        </mat-form-field>
+
+
+        <!-- Location -->
+        <mat-form-field>
+            <mat-label>Location</mat-label>
+            <input matInput type="text" formControlName="location">
+
+            @if (!attractionForm.hasError('required')) {
+            <mat-error>Please add location</mat-error>
+            }
+
+        </mat-form-field>
+
+
+        <!-- Description -->
+        <mat-form-field class="example-full-width">
+        <mat-label>Description</mat-label>
+        <textarea matInput placeholder="Krakow is beautiful" formControlName="description"></textarea>
+
+        @if (!attractionForm.hasError('required')) {
+            <mat-error>Please add description</mat-error>
+        }
+        </mat-form-field>
+        
+        <mat-form-field class="category">
+            <mat-select placeholder="Category" formControlName="category">
+            <mat-option *ngFor="let attraction of attractions" [value]="attraction.value">
+            {{ attraction.viewValue }}
+            </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <!-- Images -->
+        <div>
+            <label for="images">Zdjęcia</label>
+            <input type="file" id="images" multiple />
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" [disabled]="attractionForm.invalid" matButton="filled">
+            Dodaj atrakcję
+        </button>
+
+    </form>
+</div>
