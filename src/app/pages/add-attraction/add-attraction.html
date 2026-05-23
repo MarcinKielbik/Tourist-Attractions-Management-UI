@@ -36,31 +36,55 @@
 
         <!-- Description -->
         <mat-form-field class="example-full-width">
-        <mat-label>Description</mat-label>
-        <textarea matInput placeholder="Krakow is beautiful" formControlName="description"></textarea>
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Krakow is beautiful" formControlName="description"></textarea>
 
-        @if (!attractionForm.hasError('required')) {
+            @if (!attractionForm.hasError('required')) {
             <mat-error>Please add description</mat-error>
-        }
+            }
         </mat-form-field>
-        
+
         <mat-form-field class="category">
             <mat-select placeholder="Category" formControlName="category">
-            <mat-option *ngFor="let attraction of attractions" [value]="attraction.value">
-            {{ attraction.viewValue }}
-            </mat-option>
+                <mat-option *ngFor="let attraction of attractions" [value]="attraction.value">
+                    {{ attraction.viewValue }}
+                </mat-option>
             </mat-select>
         </mat-form-field>
 
         <!-- Images -->
-        <div>
-            <label for="images">Zdjęcia</label>
-            <input type="file" id="images" multiple />
+        <div class="file-upload-wrapper">
+            <label class="file-upload-label" [class.has-files]="images.length > 0"
+                [class.error]="images.invalid && images.touched">
+                <input id="images" type="file" multiple accept=".jpg,.jpeg,.png,.webp"
+                    (change)="onFilesSelected($event)" class="file-upload-input" />
+
+                <span class="file-upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                </span>
+
+                <span class="file-upload-text">
+                    {{ images.length > 0 ? selectedFilesText : 'Dodaj zdjęcia' }}
+                </span>
+
+                <span class="file-upload-hint" *ngIf="images.length === 0">
+                    JPG, PNG, WEBP
+                </span>
+            </label>
+
+            @if (images.invalid && images.touched) {
+            <mat-error class="file-upload-error">Add at least one picture</mat-error>
+            }
         </div>
 
         <!-- Submit -->
-        <button type="submit" [disabled]="attractionForm.invalid" matButton="filled">
-            Dodaj atrakcję
+        <button class="submitBtn" type="submit" [disabled]="attractionForm.invalid" matButton="filled">
+            Add Attraction
         </button>
 
     </form>
