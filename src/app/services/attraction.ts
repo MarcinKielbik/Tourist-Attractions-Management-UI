@@ -11,11 +11,11 @@ export class Attraction {
   private apiUrl = `${environment.apiUrl}/attractions`;
 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getAttractions(): Observable<TouristAttraction[]> {
     return this.http.get<TouristAttraction[]>(this.apiUrl);
-  } 
+  }
 
   getAttractionById(id: number): Observable<TouristAttraction> {
     return this.http.get<TouristAttraction>(`${this.apiUrl}/${id}`)
@@ -25,8 +25,15 @@ export class Attraction {
     return this.http.post<TouristAttraction>(`${this.apiUrl}/`, attraction)
   }
 
+  uploadImage(file: File): Observable<{ url: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ url: string }>(`${this.apiUrl}/upload-image`, formData);
+  }
+
+
   updateAttraction(id: number, attraction: TouristAttraction): Observable<TouristAttraction> {
-    return this.http.put<TouristAttraction> (
+    return this.http.put<TouristAttraction>(
       `${this.apiUrl}/${id}`,
       attraction
     );

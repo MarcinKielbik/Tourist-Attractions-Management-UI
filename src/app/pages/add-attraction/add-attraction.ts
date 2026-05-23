@@ -7,6 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { forkJoin, switchMap } from 'rxjs';
 
 
 @Component({
@@ -79,11 +80,30 @@ export class AddAttraction {
     }
   }
 
-
-
-
-
   submit() {
-    console.log(this.attractionForm.value);
-  }
+  this.images.markAsTouched();
+  if (this.attractionForm.invalid) return;
+
+  const values = this.attractionForm.value;
+  const files: File[] = this.images.controls.map(c => c.value as File);
+
+  forkJoin(files.map(file => this.attractionService.uploadImage(file))).pipe(
+    switchMap(uploadedImages => {
+      const payload = {
+        name: values.name,
+        location: values.location,
+        description: values.description,
+        category: values.category,
+        images: uploadedImages
+      };
+      return this.attractionService.createAttraction(payload);
+    })
+  ).subscribe({
+    next: (res) => console.log('Dodano!', res),
+    error: (err) => console.error('Błąd:', err)
+  });
+}
+
+
+
 }
